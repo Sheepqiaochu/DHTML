@@ -1,6 +1,7 @@
 import torch
 from torch.nn import functional as F
 from device import device
+import scipy.io as sio
 
 
 def compute_center_loss(features, centers, targets):
@@ -61,3 +62,24 @@ def get_feature_loss(features_source, features_target):
     loss_L1 = criterion(features_source, features_target)
 
     return loss_L1
+
+
+def hinge_loss(features=[], targets=[]):
+    mat_data = sio.loadmat('LightenedCNN_C_lfw.mat')
+    features_of_person = torch.tensor(mat_data.get('features'))
+
+    margin = 2.0
+    features = torch.randn(len(features_of_person), 256)
+    features = features.div(
+        torch.norm(features_of_person, p=2, dim=1, keepdim=True).expand_as(features_of_person))
+    targets = torch.randn(1, len(features_of_person)).squeeze(0)
+    distances = torch.zeros(len(targets), len(targets))
+    for i in range(len(features[0])):
+        for j in range(i, len(features[1])):
+            distances[i][j] = torch.sum(torch.pow(features[i] - features[j], 2), dim=0)
+
+    print(torch.sum(distances) / torch.sum(torch.tensor(range(len(features_of_person[0])))))
+    return 0
+
+
+hinge_loss()
