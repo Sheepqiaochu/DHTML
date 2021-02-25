@@ -82,6 +82,7 @@ def load_model(args, name_counts):
 
 
 def train(args):
+    # test
     # split the dataset
     labeled_set, unlabeled_set, test_set = dataset_spilt()
 
