@@ -122,7 +122,7 @@ def plot_loss(epoch, path, loss=[]):
         os.mkdir(data_path)
 
     file_path = os.path.join(data_path, str(epoch))
-    figure_path = os.path.join(data_path, str(epoch), '.jpg')
+    figure_path = os.path.join(data_path, str(epoch) + '.jpg')
 
     loss = torch.tensor(loss)
     torch.save(loss, file_path)
@@ -133,4 +133,5 @@ def plot_loss(epoch, path, loss=[]):
     plt.xlabel('epoch')
     plt.ylabel('loss')
     plt.savefig(figure_path)
-    plt.show()
+
+
