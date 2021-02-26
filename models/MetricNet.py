@@ -11,7 +11,7 @@ class MetricNet(FaceModel):
         # build layers
         self.layer1 = nn.Linear(256, 512)
         self.layer2 = nn.ReLU(inplace=True)
-        self.layer3 = nn.Linear(512, n_classes) if self.num_classes else None
+        self.layer3 = nn.Linear(512, n_classes)  # if self.num_classes else None
 
     def forward(self, x):
         x = self.layer1(x)
@@ -20,4 +20,3 @@ class MetricNet(FaceModel):
         feature_normed = features.div(
             torch.norm(features, p=2, dim=1, keepdim=True).expand_as(features))
         return logits, feature_normed
-

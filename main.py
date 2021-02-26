@@ -58,16 +58,16 @@ def get_model_class(args):
 
 
 def load_model(args, name_counts):
-    model1 = MetricNet(n_classes=None).to(device)
+    model1 = MetricNet(n_classes=name_counts).to(device)
     model2 = ShuffleNetV2(width_mul=1.0, n_classes=name_counts).to(device)
-    # state_file1 = args.model1
-    # if not os.path.isfile(state_file1):
-    #     raise RuntimeError(
-    #         "resume file {} is not found".format(state_file1))
-    #
-    # check_point1 = torch.load(state_file1)
-    # print("loading checkpoint {}".format(state_file1))
-    # model1.load_state_dict(check_point1['state_dict'], strict=False)
+    state_file1 = args.model1
+    if not os.path.isfile(state_file1):
+        raise RuntimeError(
+            "resume file {} is not found".format(state_file1))
+
+    check_point1 = torch.load(state_file1)
+    print("loading checkpoint {}".format(state_file1))
+    model1.load_state_dict(check_point1['state_dict'], strict=False)
 
     # state_file2 = args.model2
     # if not os.path.isfile(state_file2):
@@ -82,7 +82,6 @@ def load_model(args, name_counts):
 
 
 def train(args):
-    # test
     # split the dataset
     labeled_set, unlabeled_set, test_set = dataset_spilt()
 
@@ -127,9 +126,16 @@ def train(args):
         {'params': trainables_wo_bn, 'weight_decay': 0.001},
         {'params': trainables_only_bn}
     ], lr=args.lr, momentum=0.9)
-    print(args.sigma)
+
+    learning_rate_epoch = lambda e: 1.0 / (pow(2, e / 20))
+    scheduler = torch.optim.lr_scheduler.LambdaLR(
+        optimizer,
+        lr_lambda=learning_rate_epoch,
+        last_epoch=-1)
+
     trainer = Trainer(
         optimizer,
+        scheduler,
         model1,
         model2,
         labeled_dataloader,

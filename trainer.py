@@ -10,13 +10,14 @@ from utils import plot_loss
 class Trainer(object):
 
     def __init__(
-            self, optimizer, model1, model2,
+            self, optimizer, scheduler,  model1, model2,
             labeled_dataloader, unlabeled_dataloader, test_dataloader,
             log_dir=False, max_epoch=100, resume=False,
             persist_stride=20, lamda=0.03, alpha=0.5, sigma=100, phi=1000):
 
         self.log_dir = log_dir
         self.optimizer = optimizer
+        self.scheduler = scheduler
         self.model1 = model1
         self.model2 = model2
         self.max_epoch = max_epoch
@@ -127,6 +128,8 @@ class Trainer(object):
                         features2_labeled.data, centers, targets, self.alpha)
                     self.model2.centers = centers - center_deltas
 
+            self.scheduler.step()
+            print("lr:", self.scheduler.get_lr())
             loss_recorder.append(total_loss)
             if not (self.current_epoch % 100):
                 plot_loss(self.current_epoch, loss_recorder)
