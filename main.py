@@ -142,6 +142,7 @@ def train(args):
         unlabeled_dataloader,
         test_dataloader,
         sigma=args.sigma,
+        phi=args.phi,
         max_epoch=args.epochs,
         resume=args.resume,
         log_dir=log_dir
@@ -271,6 +272,8 @@ if __name__ == '__main__':
                         help='path of roc.png to generated '
                              '(default: $DATASET_DIR/roc.png)')
     parser.add_argument('--sigma', type=int, metavar='N',
+                        help='input batch size for training (default: 1000)')
+    parser.add_argument('--phi', type=int, metavar='N',
                         help='input batch size for training (default: 1000)')
     args = parser.parse_args()
     main(args)

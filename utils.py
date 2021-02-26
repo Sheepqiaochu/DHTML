@@ -116,14 +116,21 @@ def load_features():
     return training_set, validation_set
 
 
-def plot_loss(epoch, loss=[]):
+def plot_loss(epoch, path, loss=[]):
+    data_path = os.path.join(path, 'loss_figure')
+    if not os.path.isdir(data_path):
+        os.mkdir(data_path)
+
+    file_path = os.path.join(data_path, epoch)
+    figure_path = os.path.join(data_path, epoch, '.jpg')
+
     loss = torch.tensor(loss)
-    torch.save(loss, './loss_record/loss_{}'.format(epoch))
-    loss = torch.load('./loss_record/loss_{}'.format(epoch))
+    torch.save(loss, file_path)
+    loss = torch.load(file_path)
     epochs = range(0, len(loss))
 
     plt.plot(epochs, loss)
     plt.xlabel('epoch')
-    plt.ylabel('lOSS')
-    plt.savefig('./loss_record/{}.jpg'.format(epoch))
+    plt.ylabel('loss')
+    plt.savefig(figure_path)
     plt.show()

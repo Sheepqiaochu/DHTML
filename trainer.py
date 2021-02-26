@@ -132,7 +132,7 @@ class Trainer(object):
             print("lr:", self.scheduler.get_lr())
             loss_recorder.append(total_loss)
             if not (self.current_epoch % 100):
-                plot_loss(self.current_epoch, loss_recorder)
+                plot_loss(self.current_epoch, loss_recorder, path=self.log_dir)
             print(
                 "[{}:{}] finished.  total_self_loss: {:.8f}\t total_L1_loss: {:.8f}\t"
                 "total_distillation_loss: {:.8f}\t total_loss: {:.8f}".format(

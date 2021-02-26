@@ -171,7 +171,7 @@ class ShuffleNetV2(FaceModel):
         x = self.globalpool(x)
         features = x.view(-1, self.stage_out_channels[-1])
 
-        #features = self.extract_feature(features)
+        # features = self.extract_feature(features)
         logits = self.classifier(features) if self.num_classes else None
 
         feature_normed = features.div(
