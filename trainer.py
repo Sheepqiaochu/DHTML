@@ -107,7 +107,7 @@ class Trainer(object):
                 loss = self_loss + L1_loss * self.sigma + distillation_loss * self.phi
 
                 total_self_loss += self_loss
-                total_distillation_loss += distillation_loss
+                total_distillation_loss += distillation_loss*self.phi
                 total_L1_loss += L1_loss
                 total_loss += loss
 
@@ -137,7 +137,7 @@ class Trainer(object):
                 "[{}:{}] finished.  total_self_loss: {:.8f}\t total_L1_loss: {:.8f}\t"
                 "total_distillation_loss: {:.8f}\t total_loss: {:.8f}".format(
                     mode, self.current_epoch, total_self_loss, total_L1_loss,
-                    total_distillation_loss*self.phi, total_loss
+                    total_distillation_loss, total_loss
                 )
             )
 
