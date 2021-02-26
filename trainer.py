@@ -10,7 +10,7 @@ from utils import plot_loss
 class Trainer(object):
 
     def __init__(
-            self, optimizer, scheduler,  model1, model2,
+            self, optimizer, scheduler, model1, model2,
             labeled_dataloader, unlabeled_dataloader, test_dataloader,
             log_dir=False, max_epoch=100, resume=False,
             persist_stride=20, lamda=0.03, alpha=0.5, sigma=100, phi=1000):
@@ -109,10 +109,10 @@ class Trainer(object):
                 total_self_loss += self_loss
                 total_distillation_loss += distillation_loss
                 total_L1_loss += L1_loss
-                total_loss += L1_loss
+                total_loss += loss
 
                 print(
-                    "[{}:{}] :  self_loss: {:.8f}\tL1_loss: {:.8f}\tdistillation_loss: {:.8f}\n"
+                    "[{}:{}] :  self_loss: {:.8f}\tL1_loss: {:.8f}\tdistillation_loss: {:.8f}\t"
                     "sum_loss: {:.8f}".format(
                         mode, self.current_epoch, self_loss, L1_loss, distillation_loss,
                         loss
@@ -135,9 +135,9 @@ class Trainer(object):
                 plot_loss(self.current_epoch, loss_recorder)
             print(
                 "[{}:{}] finished.  total_self_loss: {:.8f}\t total_L1_loss: {:.8f}\t"
-                "total_loss: {:.8f}".format(
+                "total_distillation_loss: {:8.f}\t total_loss: {:.8f}".format(
                     mode, self.current_epoch, total_self_loss, total_L1_loss,
-                    total_loss
+                    total_distillation_loss, total_loss
                 )
             )
 
