@@ -135,7 +135,7 @@ class Trainer(object):
                 plot_loss(self.current_epoch, loss_recorder)
             print(
                 "[{}:{}] finished.  total_self_loss: {:.8f}\t total_L1_loss: {:.8f}\t"
-                "total_distillation_loss: {:8.f}\t total_loss: {:.8f}".format(
+                "total_distillation_loss: {:.8f}\t total_loss: {:.8f}".format(
                     mode, self.current_epoch, total_self_loss, total_L1_loss,
                     total_distillation_loss, total_loss
                 )
