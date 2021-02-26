@@ -53,7 +53,7 @@ def get_distillation_loss(logits_source, logits_target):
     logits_target_soft = F.log_softmax(logits_source, dim=1)
     logits_source_soft = F.softmax(logits_target, dim=1)
     loss_soft = criterion(logits_target_soft, logits_source_soft)
-    loss_soft = loss_soft * T * T * 1000
+    loss_soft = loss_soft * T * T
     return loss_soft
 
 
@@ -69,8 +69,9 @@ def hinge_loss(features=[], targets=[]):
     features_of_person = torch.tensor(mat_data.get('features'))
 
     margin = 2.0
+    sum = 0
     features = torch.randn(len(features_of_person), 256)
-    features = features.div(
+    features = features_of_person.div(
         torch.norm(features_of_person, p=2, dim=1, keepdim=True).expand_as(features_of_person))
     targets = torch.randn(1, len(features_of_person)).squeeze(0)
     distances = torch.zeros(len(targets), len(targets))
@@ -78,6 +79,7 @@ def hinge_loss(features=[], targets=[]):
         for j in range(i, len(features[1])):
             distances[i][j] = torch.sum(torch.pow(features[i] - features[j], 2), dim=0)
 
+    print(torch.mean(abs(features)))
     print(torch.sum(distances) / torch.sum(torch.tensor(range(len(features_of_person[0])))))
     return 0
 

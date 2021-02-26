@@ -10,11 +10,11 @@ from utils import plot_loss
 class Trainer(object):
 
     def __init__(
-            self, optimizer, model1, model2, 
+            self, optimizer, model1, model2,
             labeled_dataloader, unlabeled_dataloader, test_dataloader,
             log_dir=False, max_epoch=100, resume=False,
-            persist_stride=20, lamda=0.03, alpha=0.5, sigma=100):
-    
+            persist_stride=20, lamda=0.03, alpha=0.5, sigma=100, phi=1000):
+
         self.log_dir = log_dir
         self.optimizer = optimizer
         self.model1 = model1
@@ -33,6 +33,7 @@ class Trainer(object):
         self.lamda = lamda
         self.alpha = alpha
         self.sigma = sigma
+        self.phi = phi
         self.test_dataloader = test_dataloader
 
         if not self.log_dir:
@@ -90,29 +91,29 @@ class Trainer(object):
                     logits_labeled, targets)
                 center_loss = compute_center_loss(features2_labeled, centers, targets)
 
-                # # compute cross-domain loss
-                # distillation_loss = get_distillation_loss(
-                #     logits_source=logits_source,
-                #     logits_target=logits_target
-                # )
+                # compute cross-domain loss
+                distillation_loss = get_distillation_loss(
+                    logits_source=logits_source,
+                    logits_target=logits_target
+                )
 
                 L1_loss = get_feature_loss(
                     features_source=features1_unlabeled,
                     features_target=features2_unlabeled
                 )
-            
+
                 self_loss = self.lamda * center_loss + cross_entropy_loss
-                loss = self_loss + L1_loss * self.sigma
+                loss = self_loss + L1_loss * self.sigma + distillation_loss * self.phi
 
                 total_self_loss += self_loss
-                # total_distillation_loss += distillation_loss
+                total_distillation_loss += distillation_loss
                 total_L1_loss += L1_loss
                 total_loss += L1_loss
 
                 print(
-                    "[{}:{}] :  self_loss: {:.8f} -  L1_loss: {:.8f}\n"
+                    "[{}:{}] :  self_loss: {:.8f}\tL1_loss: {:.8f}\tdistillation_loss: {:.8f}\n"
                     "sum_loss: {:.8f}".format(
-                        mode, self.current_epoch, self_loss, L1_loss,
+                        mode, self.current_epoch, self_loss, L1_loss, distillation_loss,
                         loss
                     )
                 )
@@ -133,7 +134,7 @@ class Trainer(object):
                 "[{}:{}] finished.  total_self_loss: {:.8f}\t total_L1_loss: {:.8f}\t"
                 "total_loss: {:.8f}".format(
                     mode, self.current_epoch, total_self_loss, total_L1_loss,
-                     total_loss
+                    total_loss
                 )
             )
 
