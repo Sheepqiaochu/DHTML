@@ -121,8 +121,8 @@ def plot_loss(epoch, path, loss=[]):
     if not os.path.isdir(data_path):
         os.mkdir(data_path)
 
-    file_path = os.path.join(data_path, epoch)
-    figure_path = os.path.join(data_path, epoch, '.jpg')
+    file_path = os.path.join(data_path, str(epoch))
+    figure_path = os.path.join(data_path, str(epoch), '.jpg')
 
     loss = torch.tensor(loss)
     torch.save(loss, file_path)
