@@ -115,7 +115,7 @@ def train(args):
         shuffle=True
     )
 
-    model1, model2 = load_model(args, 5746)
+    model1, model2 = load_model(args, 5749)
 
     trainables_wo_bn = [param for name, param in model2.named_parameters() if
                         param.requires_grad and 'bn' not in name]
@@ -127,7 +127,7 @@ def train(args):
         {'params': trainables_only_bn}
     ], lr=args.lr, momentum=0.9)
 
-    learning_rate_epoch = lambda e: 1.0 / (pow(2, e / 20))
+    learning_rate_epoch = lambda e: 1.0 * (pow(0.95, e / 20))
     scheduler = torch.optim.lr_scheduler.LambdaLR(
         optimizer,
         lr_lambda=learning_rate_epoch,

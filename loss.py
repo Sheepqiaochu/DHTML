@@ -83,5 +83,3 @@ def hinge_loss(features=[], targets=[]):
     print(torch.sum(distances) / torch.sum(torch.tensor(range(len(features_of_person[0])))))
     return 0
 
-
-hinge_loss()
