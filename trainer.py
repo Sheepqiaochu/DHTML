@@ -114,7 +114,7 @@ class Trainer(object):
                 print(
                     "[{}:{}] :  self_loss: {:.8f}\tL1_loss: {:.8f}\tdistillation_loss: {:.8f}\t"
                     "sum_loss: {:.8f}".format(
-                        mode, self.current_epoch, self_loss, L1_loss, distillation_loss,
+                        mode, self.current_epoch, self_loss, L1_loss, distillation_loss * self.phi,
                         loss
                     )
                 )
