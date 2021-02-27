@@ -130,7 +130,7 @@ class Trainer(object):
                     self.model2.centers = centers - center_deltas
 
             self.scheduler.step()
-            print("lr:", self.scheduler.get_lr())
+            print("lr:", self.scheduler.get_last_lr())
             loss_recorder.append(total_loss)
             if not (self.current_epoch % 20):
                 plot_loss(self.current_epoch, self.log_dir, loss_recorder)
