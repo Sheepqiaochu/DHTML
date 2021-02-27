@@ -104,7 +104,7 @@ class Trainer(object):
                 )
 
                 self_loss = self.lamda * center_loss + cross_entropy_loss
-                loss = self_loss + L1_loss * self.sigma + distillation_loss * self.phi
+                loss = self_loss*self.sigma + L1_loss + distillation_loss * self.phi
 
                 total_self_loss += self_loss
                 total_distillation_loss += distillation_loss*self.phi
