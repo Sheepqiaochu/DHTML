@@ -9,6 +9,7 @@ from utils import plot_loss
 
 class Trainer(object):
 
+    # test
     def __init__(
             self, optimizer, scheduler, model1, model2,
             labeled_dataloader, unlabeled_dataloader, test_dataloader,
