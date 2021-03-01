@@ -9,6 +9,7 @@ from imageaug import transform_for_infer, transform_for_training
 from metrics import compute_roc
 from models import Resnet50FaceModel, Resnet18FaceModel
 from models.ShuffleNet_Target import ShuffleNet_Target
+from models.ShuffleNet_Source import ShuffleNet_Source
 from models.MetricNet import MetricNet
 from trainer import Trainer
 from utils import download, generate_roc_curve, image_loader
@@ -51,7 +52,7 @@ def get_model_class(args):
     if args.arch == 'resnet50':
         model_class = Resnet50FaceModel
     if args.arch == 'ShuffleNetV2':
-        model_class = ShuffleNet_Target
+        model_class = ShuffleNet_Source
     if args.arch == 'MetricNet':
         model_class = MetricNet
     return model_class
