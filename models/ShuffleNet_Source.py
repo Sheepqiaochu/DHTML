@@ -157,8 +157,8 @@ class ShuffleNet_Source(FaceModel):
         # Global pool:picture size from 7*7 to 1*1
         self.globalpool = nn.Sequential(nn.AvgPool2d(int(input_size / 32)))
 
-        self.extract_feature = nn.Linear(
-            self.stage_out_channels[-1], self.feature_dim)
+        # self.extract_feature = nn.Linear(
+        #     self.stage_out_channels[-1], self.feature_dim)
         # building classifier
         self.classifier = nn.Linear(self.feature_dim, n_classes)
 
