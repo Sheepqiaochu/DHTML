@@ -105,11 +105,11 @@ class InvertedResidual(nn.Module):
         return channel_shuffle(out, 2)
 
 
-class ShuffleNetV2(FaceModel):
+class ShuffleNet_Target(FaceModel):
     IMAGE_SHAPE = (224, 224)
-    FEATURE_DIMENSION = 512
+    FEATURE_DIMENSION = 1024
 
-    def __init__(self, n_classes, input_size=224, width_mul=1.0):
+    def __init__(self, n_classes, input_size=224, width_mul=0.5):
         super().__init__(num_classes=n_classes, feature_dim=self.FEATURE_DIMENSION)
         num_groups = 2
         assert input_size % 32 == 0
@@ -119,7 +119,7 @@ class ShuffleNetV2(FaceModel):
         if width_mul == 0.5:
             self.stage_out_channels = [-1, 24, 48, 96, 192, self.FEATURE_DIMENSION]
         elif width_mul == 1.0:
-            self.stage_out_channels = [-1, 24, 116, 232, 464, 512]
+            self.stage_out_channels = [-1, 24, 116, 232, 464, self.FEATURE_DIMENSION]
         elif width_mul == 1.5:
             self.stage_out_channels = [-1, 24, 176, 352, 704, self.FEATURE_DIMENSION]
         elif width_mul == 2.0:

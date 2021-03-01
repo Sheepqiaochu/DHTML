@@ -116,7 +116,8 @@ def load_features():
     return training_set, validation_set
 
 
-def plot_loss(epoch, path, loss=[]):
+def plot_loss(epoch, path, loss):
+    plt_color = ['blue', 'red', 'yellow', 'green']
     data_path = os.path.join(path, 'loss_figure')
     if not os.path.isdir(data_path):
         os.mkdir(data_path)
@@ -124,14 +125,14 @@ def plot_loss(epoch, path, loss=[]):
     file_path = os.path.join(data_path, str(epoch))
     figure_path = os.path.join(data_path, str(epoch) + '.jpg')
 
-    loss = torch.tensor(loss)
     torch.save(loss, file_path)
     loss = torch.load(file_path)
-    epochs = range(0, len(loss))
+    for i, name in enumerate(loss):
+        epochs = range(0, len(loss[name]))
+        plt.plot(epochs, loss[name], color=plt_color[i], label=name)
 
-    plt.plot(epochs, loss)
     plt.xlabel('epoch')
     plt.ylabel('loss')
     plt.savefig(figure_path)
-
-
+    plt.legend()
+    plt.show()

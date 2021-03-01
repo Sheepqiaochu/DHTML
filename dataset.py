@@ -81,7 +81,7 @@ class UnlabeledDataset(data.Dataset):
         image = image_loader(self.datasets[index][2])
         if self.transform:
             image = self.transform(image)
-        return self.datasets[index][1], self.datasets[index][0], image
+        return self.datasets[index][1], image, image
 
 
 class PairedDataset(data.Dataset):

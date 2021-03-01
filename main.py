@@ -8,7 +8,7 @@ from device import device
 from imageaug import transform_for_infer, transform_for_training
 from metrics import compute_roc
 from models import Resnet50FaceModel, Resnet18FaceModel
-from models.ShuffleNet_Target import ShuffleNetV2
+from models.ShuffleNet_Target import ShuffleNet_Target
 from models.MetricNet import MetricNet
 from trainer import Trainer
 from utils import download, generate_roc_curve, image_loader
@@ -51,15 +51,15 @@ def get_model_class(args):
     if args.arch == 'resnet50':
         model_class = Resnet50FaceModel
     if args.arch == 'ShuffleNetV2':
-        model_class = ShuffleNetV2
+        model_class = ShuffleNet_Target
     if args.arch == 'MetricNet':
         model_class = MetricNet
     return model_class
 
 
 def load_model(args, name_counts):
-    model1 = MetricNet(n_classes=name_counts).to(device)
-    model2 = ShuffleNetV2(width_mul=1.0, n_classes=name_counts).to(device)
+    model1 = ShuffleNet_Target(width_mul=1.5, n_classes=name_counts).to(device)
+    model2 = ShuffleNet_Target(width_mul=0.5, n_classes=name_counts).to(device)
     state_file1 = args.model1
     if not os.path.isfile(state_file1):
         raise RuntimeError(

@@ -105,24 +105,24 @@ class InvertedResidual(nn.Module):
         return channel_shuffle(out, 2)
 
 
-class ShuffleNet_source(FaceModel):
+class ShuffleNet_Source(FaceModel):
     IMAGE_SHAPE = (224, 224)
     FEATURE_DIMENSION = 1024
 
-    def __init__(self, n_classes=0, input_size=224, width_mult=1.0):
+    def __init__(self, n_classes=0, input_size=224, width_mul=1.5):
         super().__init__(num_classes=n_classes, feature_dim=self.FEATURE_DIMENSION)
         num_groups = 2
         assert input_size % 32 == 0
         self.stage_repeats = [4, 8, 4]
         # index 0 is invalid and should never be called.
         # only used for indexing convenience.
-        if width_mult == 0.5:
+        if width_mul == 0.5:
             self.stage_out_channels = [-1, 24, 48, 96, 192, self.FEATURE_DIMENSION]
-        elif width_mult == 1.0:
+        elif width_mul == 1.0:
             self.stage_out_channels = [-1, 24, 116, 232, 464, self.FEATURE_DIMENSION]
-        elif width_mult == 1.5:
+        elif width_mul == 1.5:
             self.stage_out_channels = [-1, 24, 176, 352, 704, self.FEATURE_DIMENSION]
-        elif width_mult == 2.0:
+        elif width_mul == 2.0:
             self.stage_out_channels = [-1, 24, 224, 488, 976, self.FEATURE_DIMENSION * 2]
         else:
             raise ValueError(

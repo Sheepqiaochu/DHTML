@@ -26,7 +26,9 @@ class Trainer(object):
         self.persist_stride = persist_stride
         self.labeled_dataloader = labeled_dataloader
         self.unlabeled_dataloader = unlabeled_dataloader
-        self.training_losses = []
+        self.training_losses = {
+            'self_loss': [], 'L1 loss': [],
+            'distillation loss': [], 'together': []}
         self.validation_losses = {
             'L1 loss': [], 'distillation loss': [],
             'together': [], 'top3acc': [], 'top1acc': []}
@@ -43,6 +45,7 @@ class Trainer(object):
                 os.path.realpath(__file__)), 'logs')
         if not os.path.isdir(self.log_dir):
             os.mkdir(self.log_dir)
+
 
     def train(self):
         for self.current_epoch in range(self.start_epoch, self.max_epoch + 1):
@@ -69,21 +72,21 @@ class Trainer(object):
         with torch.set_grad_enabled(mode == 'train'):
             for labeled_image, targets in labeled_dataloader:
                 try:
-                    unlabeled_features, _, unlabeled_image = next(dataloader_iterator)
+                    _, unlabeled_image_source, unlabeled_image_target = next(dataloader_iterator)
                 except StopIteration:
                     dataloader_iterator = iter(unlabeled_dataloader)
-                    unlabeled_features, _, unlabeled_image = next(dataloader_iterator)
+                    _, unlabeled_image_source, unlabeled_image_target = next(dataloader_iterator)
 
                 batch += 1
                 targets = torch.tensor(targets).to(device)
-                unlabeled_image = unlabeled_image.to(device)
-                unlabeled_features = unlabeled_features.to(device)
+                unlabeled_image_target = unlabeled_image_target.to(device)
+                unlabeled_image_source = unlabeled_image_source.to(device)
                 labeled_image = labeled_image.to(device)
                 centers = self.model2.centers
 
                 # get unlabeled features
-                logits_source, features1_unlabeled = self.model1(unlabeled_features)
-                logits_target, features2_unlabeled = self.model2(unlabeled_image)
+                logits_source, features1_unlabeled = self.model1(unlabeled_image_source)
+                logits_target, features2_unlabeled = self.model2(unlabeled_image_target)
 
                 # get labeled features and logits
                 logits_labeled, features2_labeled = self.model2(labeled_image)
@@ -105,17 +108,17 @@ class Trainer(object):
                 )
 
                 self_loss = self.lamda * center_loss + cross_entropy_loss
-                loss = self_loss*self.sigma + L1_loss + distillation_loss * self.phi
+                loss = self_loss + L1_loss * self.sigma + distillation_loss * self.phi
 
                 total_self_loss += self_loss
-                total_distillation_loss += distillation_loss*self.phi
+                total_distillation_loss += distillation_loss
                 total_L1_loss += L1_loss
                 total_loss += loss
 
                 print(
                     "[{}:{}] :  self_loss: {:.8f}\tL1_loss: {:.8f}\tdistillation_loss: {:.8f}\t"
                     "sum_loss: {:.8f}".format(
-                        mode, self.current_epoch, self_loss, L1_loss, distillation_loss * self.phi,
+                        mode, self.current_epoch, self_loss, L1_loss, distillation_loss,
                         loss
                     )
                 )
@@ -131,7 +134,11 @@ class Trainer(object):
 
             self.scheduler.step()
             print("lr:", self.scheduler.get_last_lr())
-            loss_recorder.append(total_loss)
+            loss_recorder['self_loss'].append(total_self_loss)
+            loss_recorder['L1_loss'].append(total_L1_loss)
+            loss_recorder['total_distillation_loss'].append(total_distillation_loss)
+            loss_recorder['together'].append(total_loss)
+
             if not (self.current_epoch % 20):
                 plot_loss(self.current_epoch, self.log_dir, loss_recorder)
             print(
