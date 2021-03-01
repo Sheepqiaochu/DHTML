@@ -46,7 +46,6 @@ class Trainer(object):
         if not os.path.isdir(self.log_dir):
             os.mkdir(self.log_dir)
 
-
     def train(self):
         for self.current_epoch in range(self.start_epoch, self.max_epoch + 1):
             self.run_epoch(mode='train')

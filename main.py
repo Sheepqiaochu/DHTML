@@ -163,7 +163,7 @@ def evaluate(args):
         download(dataset_dir, 'http://vis-www.cs.umass.edu/lfw/pairs.txt')
 
     dataset = LFWPairedDataset(
-        dataset_dir, pairs_path, transform_for_training(model_class.IMAGE_SHAPE))
+        dataset_dir, pairs_path, transform_for_infer(model_class.IMAGE_SHAPE))
     dataloader = DataLoader(dataset, batch_size=args.batch_size, num_workers=4)
     model = model_class(False).to(device)
 
