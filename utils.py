@@ -1,4 +1,5 @@
 import os
+from collections import OrderedDict
 from math import ceil
 import torch
 import cv2
@@ -117,7 +118,13 @@ def load_features():
 
 
 def plot_loss(epoch, path, loss):
+    # loss = {
+    #     "f1": [1, 2, 3, 4],
+    #     "f2": [5, 6, 7, 8],
+    #     "f3": [9, 10, 11, 12]
+    # }
     plt_color = ['blue', 'red', 'yellow', 'green']
+
     data_path = os.path.join(path, 'loss_figure')
     if not os.path.isdir(data_path):
         os.mkdir(data_path)
@@ -131,8 +138,15 @@ def plot_loss(epoch, path, loss):
         epochs = range(0, len(loss[name]))
         plt.plot(epochs, loss[name], color=plt_color[i], label=name)
 
+    handles, labels = plt.gca().get_legend_handles_labels()
+    by_label = OrderedDict(zip(labels, handles))
+
     plt.xlabel('epoch')
     plt.ylabel('loss')
     plt.savefig(figure_path)
-    plt.legend()
+    plt.legend(by_label.values(), by_label.keys())
     plt.show()
+
+#
+# for i in range(5):
+#     plot_loss()
