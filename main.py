@@ -52,7 +52,7 @@ def get_model_class(args):
     if args.arch == 'resnet50':
         model_class = Resnet50FaceModel
     if args.arch == 'ShuffleNetV2':
-        model_class = ShuffleNet_Source(width_mul=args.width_mul)
+        model_class = ShuffleNet_Source
     if args.arch == 'MetricNet':
         model_class = MetricNet
     return model_class
@@ -165,7 +165,7 @@ def evaluate(args):
     dataset = LFWPairedDataset(
         dataset_dir, pairs_path, transform_for_infer(model_class.IMAGE_SHAPE))
     dataloader = DataLoader(dataset, batch_size=args.batch_size, num_workers=4)
-    model = model_class(False).to(device)
+    model = model_class(width_mul=args.width_mul).to(device)
 
     checkpoint = torch.load(args.evaluate)
     model.load_state_dict(checkpoint['state_dict'], strict=False)
