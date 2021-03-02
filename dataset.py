@@ -3,7 +3,7 @@ import tarfile
 from math import ceil, floor
 
 from torch.utils import data
-from utils import image_loader, download
+from utils import image_loader, download, lbp_loader
 
 DATASET_TARBALL = "http://vis-www.cs.umass.edu/lfw/lfw-deepfunneled.tgz"
 PAIRS_TRAIN = "http://vis-www.cs.umass.edu/lfw/pairsDevTrain.txt"
@@ -62,7 +62,7 @@ class Dataset(data.Dataset):
         return len(self.datasets)
 
     def __getitem__(self, index):
-        image = image_loader(self.datasets[index][1])  # images of train set
+        image = lbp_loader(self.datasets[index][1])  # images of train set
         if self.transform:
             image = self.transform(image)
         return image, self.datasets[index][0]
@@ -79,9 +79,10 @@ class UnlabeledDataset(data.Dataset):
 
     def __getitem__(self, index):
         image = image_loader(self.datasets[index][2])
+        lbp = lbp_loader(self.datasets[index][2])
         if self.transform:
             image = self.transform(image)
-        return self.datasets[index][1], image, image
+        return self.datasets[index][1], image, lbp
 
 
 class PairedDataset(data.Dataset):
