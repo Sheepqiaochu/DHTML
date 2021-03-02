@@ -27,8 +27,8 @@ class Trainer(object):
         self.labeled_dataloader = labeled_dataloader
         self.unlabeled_dataloader = unlabeled_dataloader
         self.training_losses = {
-            'self_loss': [], 'L1 loss': [],
-            'distillation loss': [], 'together': []}
+            'self_loss': [], 'L1_loss': [],
+            'distillation_loss': [], 'together': []}
         self.validation_losses = {
             'L1 loss': [], 'distillation loss': [],
             'together': [], 'top3acc': [], 'top1acc': []}
@@ -135,7 +135,7 @@ class Trainer(object):
             print("lr:", self.scheduler.get_last_lr())
             loss_recorder['self_loss'].append(total_self_loss)
             loss_recorder['L1_loss'].append(total_L1_loss)
-            loss_recorder['total_distillation_loss'].append(total_distillation_loss)
+            loss_recorder['distillation_loss'].append(total_distillation_loss)
             loss_recorder['together'].append(total_loss)
 
             if not (self.current_epoch % 20):
