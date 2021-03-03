@@ -123,7 +123,7 @@ def plot_loss(epoch, path, loss):
     #     "f2": [5, 6, 7, 8],
     #     "f3": [9, 10, 11, 12]
     # }
-    plt_color = ['blue', 'red', 'yellow', 'green']
+    plt_color = ['blue', 'coral', 'yellow', 'green', 'red']
 
     data_path = os.path.join(path, 'loss_figure')
     if not os.path.isdir(data_path):
