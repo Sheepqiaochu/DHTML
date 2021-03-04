@@ -192,7 +192,7 @@ def evaluate(args):
         embedings_b[start:end, :] = batched_embedings_b.data
         matches[start:end] = batched_matches.data
 
-    thresholds = np.arange(0, 4, 0.1)
+    thresholds = np.arange(0, 1, 0.05)
     distances = torch.cosine_similarity(embedings_a,embedings_b,dim=1)  # L2 distance
     print(distances)
     print(torch.mean(distances))
