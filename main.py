@@ -87,6 +87,8 @@ def train(args):
     dataset_dir = get_dataset_dir(args)
     log_dir = get_log_dir(args)
 
+    training_set, validation_set, num_classes = create_datasets(dataset_dir)
+
     # split the dataset
     labeled_set, unlabeled_set, test_set = dataset_spilt()
 
