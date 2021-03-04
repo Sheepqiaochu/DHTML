@@ -83,6 +83,10 @@ def load_model(args, name_counts):
 
 
 def train(args):
+    # load log path
+    dataset_dir = get_dataset_dir(args)
+    log_dir = get_log_dir(args)
+
     # split the dataset
     labeled_set, unlabeled_set, test_set = dataset_spilt()
 
@@ -90,10 +94,6 @@ def train(args):
     labeled_dataset = Dataset(labeled_set, transform_for_training((224, 224)))
     unlabeled_dataset = UnlabeledDataset(unlabeled_set, transform_for_training((224, 224)))
     test_set = Dataset(test_set, transform_for_infer((224, 224)))
-
-    # load log path
-    dataset_dir = get_dataset_dir(args)
-    log_dir = get_log_dir(args)
 
     labeled_dataloader = torch.utils.data.DataLoader(
         labeled_dataset,
