@@ -3,3 +3,10 @@ logs
 *.pth
 .idea
 run.sh
+result/
+*.py[cod]
+*.so
+*.egg
+*.egg-info
+dist
+build
