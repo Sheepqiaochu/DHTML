@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --gres=gpu:1
 #SBATCH -o result/metric_lr001_sigma100_extract.out
-#SBATCH -t 2-00:00:00       
+#SBATCH -t 1-00:00:00
 # SBATCH -N 1
 
 
