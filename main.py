@@ -129,7 +129,7 @@ def train(args):
     ], lr=args.lr, momentum=0.9)
 
     learning_rate_epoch = lambda e: 1.0 * (pow(0.8, e / 20)) if e < 120 else (
-        0.01 * (pow(0.8, e / 10)) if e < 180 else 0.001 * (pow(0.8, e / 20)))
+        0.01 * (pow(0.8, e / 10)) if e < 180 else 0.005 * (pow(0.8, e / 20)))
     scheduler = torch.optim.lr_scheduler.LambdaLR(
         optimizer,
         lr_lambda=learning_rate_epoch,
