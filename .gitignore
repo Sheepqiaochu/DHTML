@@ -1,5 +1,4 @@
 __pycache__/
-*.pth
 .idea
 run.sh
 result/
