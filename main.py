@@ -193,7 +193,7 @@ def evaluate(args):
         matches[start:end] = batched_matches.data
 
     thresholds = np.arange(0, 4, 0.1)
-    distances = torch.sum(torch.pow(embedings_a - embedings_b, 2), dim=1)  # L2 distance
+    distances = torch.cosine_similarity(embedings_a,embedings_b,dim=1)  # L2 distance
     print(distances)
     print(torch.mean(distances))
     tpr, fpr, accuracy, best_thresholds = compute_roc(
