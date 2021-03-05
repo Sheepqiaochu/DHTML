@@ -66,7 +66,7 @@ class Dataset(data.Dataset):
         if self.target_transform:
             lbp = self.target_transform(image)
 
-        return image, self.datasets[index][0]
+        return lbp, self.datasets[index][0]
 
 
 class UnlabeledDataset(data.Dataset):

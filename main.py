@@ -87,13 +87,11 @@ def train(args):
     dataset_dir = get_dataset_dir(args)
     log_dir = get_log_dir(args)
 
-    training_set, validation_set, num_classes = create_datasets(dataset_dir)
-
     # split the dataset
     labeled_set, unlabeled_set, test_set = dataset_spilt()
 
     # load dataset
-    labeled_dataset = Dataset(labeled_set, transform_for_training((224, 224)))
+    labeled_dataset = Dataset(labeled_set, target_transform=transform_for_lbp((224, 224)))
     unlabeled_dataset = UnlabeledDataset(unlabeled_set, transform_for_training((224, 224)),
                                          target_transform=transform_for_lbp((224, 224)))
     test_set = Dataset(test_set, transform_for_infer((224, 224)))
