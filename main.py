@@ -5,7 +5,7 @@ import torch
 from torch.utils.data import DataLoader
 from dataset import Dataset, create_datasets, LFWPairedDataset, UnlabeledDataset
 from device import device
-from imageaug import transform_for_infer, transform_for_training
+from imageaug import transform_for_infer, transform_for_training, transform_for_lbp
 from metrics import compute_roc
 from models import Resnet50FaceModel, Resnet18FaceModel
 from models.ShuffleNet_Target import ShuffleNet_Target
@@ -94,7 +94,8 @@ def train(args):
 
     # load dataset
     labeled_dataset = Dataset(labeled_set, transform_for_training((224, 224)))
-    unlabeled_dataset = UnlabeledDataset(unlabeled_set, transform_for_training((224, 224)))
+    unlabeled_dataset = UnlabeledDataset(unlabeled_set, transform_for_training((224, 224)),
+                                         target_transform=transform_for_lbp((224, 224)))
     test_set = Dataset(test_set, transform_for_infer((224, 224)))
 
     labeled_dataloader = torch.utils.data.DataLoader(
