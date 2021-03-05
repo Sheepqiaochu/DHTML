@@ -147,7 +147,7 @@ def plot_loss(epoch, path, loss):
     plt.ylabel('loss')
     plt.savefig(figure_path)
     plt.legend(by_label.values(), by_label.keys())
-    plt.show()
+    # plt.show()
 
 #
 # for i in range(5):
