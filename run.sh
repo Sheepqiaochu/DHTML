@@ -1,17 +1,1 @@
-#!/bin/bash
-
-#SBATCH -A test
-#SBATCH -J 001_100_extract
-#SBATCH -p gpu
-#SBATCH --cpus-per-task=8
-#SBATCH --gres=gpu:1
-#SBATCH -o result/metric_lr001_sigma100_extract.out
-#SBATCH -t 1-00:00:00
-# SBATCH -N 1
-
-
-module load cuda/10.2
-module load gcc/5.5.0
-conda activate python36
-python3 main.py --batch_size 256 --log_dir ~/logs/metric_lr001_sigma100_extract --epoch 4000 --lr 0.01 --sigma 100
-
+CUDA_VISIBLE_DEVICES=1 python3 main.py --batch_size 256 --log_dir ~/logs/lbp_sigma1000  --epoch 6000 --lr 0.1 --sigma 1000 --phi 0 --model1 ~/models/epoch_120.pth.tar >> result/lbp_sigma1000 &

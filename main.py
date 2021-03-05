@@ -59,7 +59,7 @@ def get_model_class(args):
 
 
 def load_model(args, name_counts):
-    model1 = ShuffleNet_Target(width_mul=1.5, n_classes=name_counts).to(device)
+    model1 = ShuffleNet_Source(width_mul=1.5, n_classes=name_counts).to(device)
     model2 = ShuffleNet_Target(width_mul=0.5, n_classes=name_counts).to(device)
     state_file1 = args.model1
     if not os.path.isfile(state_file1):
@@ -130,7 +130,8 @@ def train(args):
         {'params': trainables_only_bn}
     ], lr=args.lr, momentum=0.9)
 
-    learning_rate_epoch = lambda e: 1.0 * (pow(0.8, e / 20)) if e < 120 else (0.01 * (pow(0.8, e / 20)))
+    learning_rate_epoch = lambda e: 1.0 *  (pow(0.9, e / 64)) if e < 200 else (
+        0.4 * (pow(0.9, e / 64)) if e < 400 else 0.1* (pow(0.9, e / 64)))
     scheduler = torch.optim.lr_scheduler.LambdaLR(
         optimizer,
         lr_lambda=learning_rate_epoch,
