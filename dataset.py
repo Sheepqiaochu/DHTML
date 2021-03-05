@@ -63,16 +63,18 @@ class Dataset(data.Dataset):
 
     def __getitem__(self, index):
         image = lbp_loader(self.datasets[index][1])  # images of train set
-        if self.transform:
-            image = self.transform(image)
+        if self.target_transform:
+            lbp = self.target_transform(image)
+
         return image, self.datasets[index][0]
 
 
 class UnlabeledDataset(data.Dataset):
-    def __init__(self, datasets, transform=None):
+    def __init__(self, datasets, transform=None, target_transform=None):
         self.datasets = datasets
         self.num_classes = len(datasets)
         self.transform = transform
+        self.target_transform = target_transform
 
     def __len__(self):
         return len(self.datasets)
@@ -82,6 +84,8 @@ class UnlabeledDataset(data.Dataset):
         lbp = lbp_loader(self.datasets[index][2])
         if self.transform:
             image = self.transform(image)
+        if self.target_transform:
+            lbp = self.target_transform(lbp)
         return self.datasets[index][1], image, lbp
 
 
