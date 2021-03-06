@@ -82,6 +82,16 @@ def load_model(args, name_counts):
     return model1, model2
 
 
+def lr_tune(epoch):
+    if epoch < 150:
+        return 1
+    elif epoch < 400:
+        return 0.1 * (pow(0.9, epoch / 64))
+    else:
+        if not (epoch % 64):
+            return 0.03 * (pow(0.9, epoch / 64))
+
+
 def train(args):
     # load log path
     dataset_dir = get_dataset_dir(args)
@@ -133,7 +143,7 @@ def train(args):
         0.4 * (pow(0.9, e / 64)) if e < 400 else 0.1 * (pow(0.9, e / 64)))
     scheduler = torch.optim.lr_scheduler.LambdaLR(
         optimizer,
-        lr_lambda=learning_rate_epoch,
+        lr_lambda=lr_tune,
         last_epoch=-1)
 
     trainer = Trainer(
