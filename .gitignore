@@ -8,3 +8,4 @@ result/
 *.egg-info
 dist
 build
+.xml
