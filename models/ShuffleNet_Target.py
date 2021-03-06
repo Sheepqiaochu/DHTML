@@ -109,7 +109,7 @@ class ShuffleNet_Target(FaceModel):
     IMAGE_SHAPE = (224, 224)
     FEATURE_DIMENSION = 1024
 
-    def __init__(self, n_classes, input_size=224, width_mul=0.5):
+    def __init__(self, n_classes=0, input_size=224, width_mul=0.5):
         super().__init__(num_classes=n_classes, feature_dim=self.FEATURE_DIMENSION)
         num_groups = 2
         assert input_size % 32 == 0
