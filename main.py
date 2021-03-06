@@ -12,7 +12,7 @@ from models.ShuffleNet_Target import ShuffleNet_Target
 from models.ShuffleNet_Source import ShuffleNet_Source
 from models.MetricNet import MetricNet
 from trainer import Trainer
-from utils import download, generate_roc_curve, image_loader
+from utils import download, generate_roc_curve, image_loader, lbp_loader
 from utils import dataset_spilt
 
 
@@ -165,7 +165,7 @@ def evaluate(args):
         download(dataset_dir, 'http://vis-www.cs.umass.edu/lfw/pairs.txt')
 
     dataset = LFWPairedDataset(
-        dataset_dir, pairs_path, transform_for_infer(model_class.IMAGE_SHAPE))
+        dataset_dir, pairs_path, transform_for_lbp(model_class.IMAGE_SHAPE), loader=lbp_loader)
     dataloader = DataLoader(dataset, batch_size=args.batch_size, num_workers=4)
     model = model_class(width_mul=args.width_mul).to(device)
 
