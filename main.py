@@ -52,7 +52,7 @@ def get_model_class(args):
     if args.arch == 'resnet50':
         model_class = Resnet50FaceModel
     if args.arch == 'ShuffleNetV2':
-        model_class = ShuffleNet_Source
+        model_class = ShuffleNet_Target
     if args.arch == 'MetricNet':
         model_class = MetricNet
     return model_class
