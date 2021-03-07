@@ -137,6 +137,7 @@ class ShuffleNet_Target(FaceModel):
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
 
         self.features = []
+        self.stage = []
         # building inverted residual blocks
         for idxstage in range(len(self.stage_repeats)):
             numrepeat = self.stage_repeats[idxstage]
@@ -147,27 +148,28 @@ class ShuffleNet_Target(FaceModel):
                 else:
                     self.features.append(InvertedResidual(input_channel, output_channel, 1, 1))
                 input_channel = output_channel
+            self.stage.insert(idxstage, nn.Sequential(*self.features))
+            self.features.clear()
 
-        # make it nn.Sequential
-        self.features = nn.Sequential(*self.features)
+            # building last several layers
+            # conv 7*7
+            self.conv_last = conv_1x1_bn(input_channel, self.stage_out_channels[-1])
+            # Global pool:picture size from 7*7 to 1*1
+            self.globalpool = nn.Sequential(nn.AvgPool2d(int(input_size / 32)))
 
-        # building last several layers
-        # conv 7*7
-        self.conv_last = conv_1x1_bn(input_channel, self.stage_out_channels[-1])
-        # Global pool:picture size from 7*7 to 1*1
-        self.globalpool = nn.Sequential(nn.AvgPool2d(int(input_size / 32)))
-
-        # self.extract_feature = nn.Linear(
-        #     self.stage_out_channels[-1], self.feature_dim)
-        # building classifier
-        if self.num_classes:
-            self.classifier = nn.Linear(self.feature_dim, n_classes)
+            # self.extract_feature = nn.Linear(
+            #     self.stage_out_channels[-1], self.feature_dim)
+            # building classifier
+            if self.num_classes:
+                self.classifier = nn.Linear(self.feature_dim, n_classes)
 
     def forward(self, x):
         x = self.conv1(x)
         x = self.maxpool(x)
-        x = self.features(x)
-        x = self.conv_last(x)
+        x1 = self.stage[0](x)
+        x2 = self.stage[1](x1)
+        x3 = self.stage[2](x2)
+        x = self.conv_last(x3)
         x = self.globalpool(x)
         features = x.view(-1, self.stage_out_channels[-1])
 
@@ -176,4 +178,4 @@ class ShuffleNet_Target(FaceModel):
 
         feature_normed = features.div(
             torch.norm(features, p=2, dim=1, keepdim=True).expand_as(features))
-        return logits, feature_normed
+        return logits, x1
