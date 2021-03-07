@@ -127,9 +127,6 @@ def train(args):
     )
 
     model1, model2 = load_model(args, 5749)
-    print(model1)
-    print(model2)
-
     trainables_wo_bn = [param for name, param in model2.named_parameters() if
                         param.requires_grad and 'bn' not in name]
     trainables_only_bn = [param for name, param in model2.named_parameters() if
