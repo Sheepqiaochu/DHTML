@@ -240,5 +240,11 @@
         </breakpoint>
       </default-breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="model" />
+        <watch expression="model" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>
