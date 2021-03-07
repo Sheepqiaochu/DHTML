@@ -86,10 +86,9 @@ def lr_tune(epoch):
     if epoch < 150:
         return 1
     elif epoch < 400:
-        return 0.1 * (pow(0.9, epoch / 64))
+        return 0.1 * (pow(0.9, epoch // 40))
     else:
-        if not (epoch % 64):
-            return 0.03 * (pow(0.9, epoch / 64))
+        return 0.03 * (pow(0.9, epoch // 64))
 
 
 def train(args):
