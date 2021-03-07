@@ -84,11 +84,11 @@ class Trainer(object):
                 centers = self.model2.centers
 
                 # get unlabeled features
-                logits_source, features1_unlabeled = self.model1(unlabeled_image_source)
-                logits_target, features2_unlabeled = self.model2(unlabeled_image_target)
+                logits_source, _, features1_unlabeled = self.model1(unlabeled_image_source)
+                logits_target, _, features2_unlabeled = self.model2(unlabeled_image_target)
 
                 # get labeled features and logits
-                logits_labeled, features2_labeled = self.model2(labeled_image)
+                logits_labeled, features2_labeled, _ = self.model2(labeled_image)
 
                 # compute loss for target domain
                 cross_entropy_loss = torch.nn.functional.cross_entropy(
@@ -134,8 +134,8 @@ class Trainer(object):
             self.scheduler.step()
             # print("lr:", self.scheduler.get_last_lr())
             loss_recorder['self_loss'].append(total_self_loss)
-            loss_recorder['L1_loss'].append(total_L1_loss*self.sigma)
-            loss_recorder['distillation_loss'].append(total_distillation_loss*self.phi)
+            loss_recorder['L1_loss'].append(total_L1_loss * self.sigma)
+            loss_recorder['distillation_loss'].append(total_distillation_loss * self.phi)
             loss_recorder['together'].append(total_loss)
 
             if not (self.current_epoch % 20):
