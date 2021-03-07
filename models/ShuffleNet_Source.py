@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from .base import FaceModel
+from base import FaceModel
 
 
 def conv_bn(inp, oup, stride):
@@ -136,7 +136,7 @@ class ShuffleNet_Source(FaceModel):
         self.conv1 = conv_bn(3, input_channel, 2)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
 
-        self.features = []
+        features = []
         self.stage = []
         # building inverted residual blocks
         for idxstage in range(len(self.stage_repeats)):
@@ -144,12 +144,12 @@ class ShuffleNet_Source(FaceModel):
             output_channel = self.stage_out_channels[idxstage + 2]
             for i in range(numrepeat):
                 if i == 0:
-                    self.features.append(InvertedResidual(input_channel, output_channel, 2, 2))
+                    features.append(InvertedResidual(input_channel, output_channel, 2, 2))
                 else:
-                    self.features.append(InvertedResidual(input_channel, output_channel, 1, 1))
+                    features.append(InvertedResidual(input_channel, output_channel, 1, 1))
                 input_channel = output_channel
-            self.stage.insert(idxstage, nn.Sequential(*self.features))
-            self.features.clear()
+            self.stage.insert(idxstage, nn.Sequential(*features))
+            features.clear()
 
             # building last several layers
             # conv 7*7
@@ -179,3 +179,4 @@ class ShuffleNet_Source(FaceModel):
         feature_normed = features.div(
             torch.norm(features, p=2, dim=1, keepdim=True).expand_as(features))
         return logits, x1
+
