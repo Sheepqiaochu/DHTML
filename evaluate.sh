@@ -1,10 +1,10 @@
 #!/bin/bash
-epoch=3000
-while(($epoch<5010))
+epoch=20
+while(($epoch<2020))
 do 
-    path="/public/data0/users/yangqiancheng/logs/taregt_5000_nodis/models/epoch_"$epoch".pth.tar"
+    path="/data/users/yangqiancheng/logs/lbp1_sigma1000/models/epoch_"$epoch".pth.tar"
     echo $path
-    epoch=`expr 200 + $epoch`
-    srun -A test -J test_model -p gpu -N 1 --ntasks-per-node=1 --cpus-per-task=10 --gres=gpu:1 python main.py --evaluate $path  --batch_size 128
+    epoch=`expr 100 + $epoch`
+    CUDA_VISIBLE_DEVICES=4  python main.py --evaluate $path  --batch_size 128 --arch ShuffleNetV2 --width_mul 0.5
 done       
 
