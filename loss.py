@@ -46,7 +46,7 @@ def get_center_delta(features, centers, targets, alpha):
 
 
 def get_distillation_loss(logits_source, logits_target, T=40):
-    criterion = torch.nn.KLDivLoss(reduction='mean')
+    criterion = torch.nn.KLDivLoss(reduction='sum')
     logits_source = torch.div(logits_source, T)
     logits_target = torch.div(logits_target, T)
     logits_target_soft = F.log_softmax(logits_source, dim=1)
@@ -57,7 +57,7 @@ def get_distillation_loss(logits_source, logits_target, T=40):
 
 
 def get_feature_loss(features_source, features_target):
-    criterion = torch.nn.L1Loss(reduction='mean')
+    criterion = torch.nn.L1Loss(reduction='sum')
     loss_L1 = criterion(features_source, features_target)
 
     return loss_L1
