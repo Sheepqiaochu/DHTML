@@ -132,7 +132,7 @@ class Trainer(object):
                     self.model2.centers = centers - center_deltas
 
             self.scheduler.step()
-            # print("lr:", self.scheduler.get_last_lr())
+            print("lr:", self.scheduler.get_last_lr())
             loss_recorder['self_loss'].append(total_self_loss)
             loss_recorder['L1_loss'].append(total_L1_loss * self.sigma)
             loss_recorder['distillation_loss'].append(total_distillation_loss * self.phi)
