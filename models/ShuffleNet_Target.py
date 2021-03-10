@@ -185,4 +185,4 @@ class ShuffleNet_Target(FaceModel):
             torch.norm(x, p=2, dim=1, keepdim=True).expand_as(x))
         feature_normed = features.div(
             torch.norm(features, p=2, dim=1, keepdim=True).expand_as(features))
-        return logits, feature_normed, x_normed
+        return logits, feature_normed, feature_normed
