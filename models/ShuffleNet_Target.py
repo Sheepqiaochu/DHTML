@@ -179,10 +179,10 @@ class ShuffleNet_Target(FaceModel):
         # features = self.extract_feature(features)
         logits = self.classifier(features) if self.num_classes else None
 
-        x = x3.view(-1, self.stage_out_channels[4]*7*7)
+        # x = x3.view(-1, self.stage_out_channels[4]*7*7)
 
-        x_normed = x.div(
-            torch.norm(x, p=2, dim=1, keepdim=True).expand_as(x))
+        # x_normed = x.div(
+        #     torch.norm(x, p=2, dim=1, keepdim=True).expand_as(x))
         feature_normed = features.div(
             torch.norm(features, p=2, dim=1, keepdim=True).expand_as(features))
         return logits, feature_normed, feature_normed
