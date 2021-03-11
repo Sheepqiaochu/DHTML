@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="006c0b6f-3a6f-445c-a48b-c94ce1167eb0" name="Default Changelist" comment="test" />
+    <list default="true" id="006c0b6f-3a6f-445c-a48b-c94ce1167eb0" name="Default Changelist" comment="test">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,7 +30,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../source_resnet50" />
   </component>
-  <component name="RunManager" selected="Python.ShuffleNet_Source">
+  <component name="RunManager" selected="Python.test">
     <configuration name="ShuffleNetV2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="DHTML" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -156,10 +159,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.test" />
         <item itemvalue="Python.ShuffleNet_Source" />
         <item itemvalue="Python.ShuffleNetV2" />
         <item itemvalue="Python.ShuffleNet_Target" />
-        <item itemvalue="Python.test" />
         <item itemvalue="Python.utils" />
       </list>
     </recent_temporary>

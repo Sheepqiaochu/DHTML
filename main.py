@@ -83,12 +83,12 @@ def load_model(args, name_counts):
 
 
 def lr_tune(epoch):
-    if epoch < 100:
-        return 1 * (pow(0.7, epoch // 20))
+    if epoch < 80:
+        return 1
     elif epoch < 300:
         return 0.1 * (pow(0.9, epoch // 20))
     else:
-        return 0.03 * (pow(0.9, epoch // 30))
+        return 0.001 * (10000 // epoch)
 
 
 def train(args):
@@ -214,7 +214,7 @@ def evaluate(args):
     roc_file = args.roc if args.roc else os.path.join(log_dir, 'roc.png')
     generate_roc_curve(fpr, tpr, roc_file)
     print(args.evaluate)
-    print('Model accuracy is {}'.format(accuracy))
+    print('Model accuracy is {}, the best thresholds is {}'.format(accuracy, best_thresholds))
     print('ROC curve generated at {}'.format(roc_file))
 
 
