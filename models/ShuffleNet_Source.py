@@ -121,7 +121,7 @@ class ShuffleNet_Source(FaceModel):
         elif width_mul == 1.0:
             self.stage_out_channels = [-1, 24, 116, 232, 464, self.FEATURE_DIMENSION]
         elif width_mul == 1.5:
-            self.stage_out_channels = [-1, 24, 176, 352, 192, self.FEATURE_DIMENSION]
+            self.stage_out_channels = [-1, 24, 176, 352, 704, self.FEATURE_DIMENSION]
         elif width_mul == 2.0:
             self.stage_out_channels = [-1, 24, 224, 488, 976, self.FEATURE_DIMENSION * 2]
         else:
@@ -185,4 +185,4 @@ class ShuffleNet_Source(FaceModel):
             torch.norm(x, p=2, dim=1, keepdim=True).expand_as(x))
         feature_normed = features.div(
             torch.norm(features, p=2, dim=1, keepdim=True).expand_as(features))
-        return logits, feature_normed, x_normed
+        return logits, feature_normed, feature_normed
