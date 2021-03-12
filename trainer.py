@@ -110,8 +110,8 @@ class Trainer(object):
                 loss = self_loss + L1_loss * self.sigma + distillation_loss * self.phi
 
                 total_self_loss += self_loss
-                total_distillation_loss += distillation_loss
-                total_L1_loss += L1_loss
+                total_distillation_loss += distillation_loss * self.phi
+                total_L1_loss += L1_loss * self.sigma
                 total_loss += loss
 
                 print(
@@ -132,10 +132,10 @@ class Trainer(object):
                     self.model2.centers = centers - center_deltas
 
             self.scheduler.step()
-            # print("lr:", self.scheduler.get_last_lr())
+            print("lr:", self.scheduler.get_last_lr())
             loss_recorder['self_loss'].append(total_self_loss)
-            loss_recorder['L1_loss'].append(total_L1_loss*self.sigma)
-            loss_recorder['distillation_loss'].append(total_distillation_loss*self.phi)
+            loss_recorder['L1_loss'].append(total_L1_loss * self.sigma)
+            loss_recorder['distillation_loss'].append(total_distillation_loss * self.phi)
             loss_recorder['together'].append(total_loss)
 
             if not (self.current_epoch % 20):
