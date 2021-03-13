@@ -216,7 +216,7 @@ def evaluate(args):
     generate_roc_curve(fpr, tpr, roc_file)
     print(args.evaluate)
     print('Model accuracy is {}'.format(accuracy))
-    print('ROC curve generated at {}'.format(roc_file))
+    # print('ROC curve generated at {}'.format(roc_file))
 
 
 def verify(args):
