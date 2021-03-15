@@ -86,7 +86,7 @@ def lr_tune(epoch):
     if epoch < 300:
         return 1.0 * (pow(0.5, epoch // 20))
     elif epoch < 800:
-        0.4 * (pow(0.9, epoch // 30))
+        return 0.4 * (pow(0.9, epoch // 30))
     elif epoch < 2000:
         return 0.1 * (pow(0.95, epoch // 64))
     else:
@@ -144,7 +144,7 @@ def train(args):
         0.4 * (pow(0.9, e // 30)) if e < 400 else 0.1 * (pow(0.9, e // 64)))
     scheduler = torch.optim.lr_scheduler.LambdaLR(
         optimizer,
-        lr_lambda=learning_rate_epoch,
+        lr_lambda=lr_tune,
         last_epoch=-1)
 
     trainer = Trainer(
