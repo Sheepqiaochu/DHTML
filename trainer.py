@@ -56,7 +56,7 @@ class Trainer(object):
         if mode == 'train':
             unlabeled_dataloader = self.unlabeled_dataloader
             labeled_dataloader = self.labeled_dataloader
-            dataloader_iterator = iter(unlabeled_dataloader)
+            dataloader_iterator = iter(labeled_dataloader)
 
             loss_recorder = self.training_losses
             self.model2.train()
@@ -69,12 +69,12 @@ class Trainer(object):
         batch = 0
 
         with torch.set_grad_enabled(mode == 'train'):
-            for labeled_image, targets in labeled_dataloader:
+            for _, unlabeled_image_source, unlabeled_image_target in unlabeled_dataloader:
                 try:
-                    _, unlabeled_image_source, unlabeled_image_target = next(dataloader_iterator)
+                    labeled_image, targets = next(dataloader_iterator)
                 except StopIteration:
-                    dataloader_iterator = iter(unlabeled_dataloader)
-                    _, unlabeled_image_source, unlabeled_image_target = next(dataloader_iterator)
+                    dataloader_iterator = iter(labeled_dataloader)
+                    labeled_image, targets = next(dataloader_iterator)
 
                 batch += 1
                 targets = torch.tensor(targets).to(device)
