@@ -68,8 +68,6 @@ class Trainer(object):
         total_loss = 0
         batch = 0
 
-        labeled_image, targets
-
         with torch.set_grad_enabled(mode == 'train'):
             for _, unlabeled_image_source, unlabeled_image_target in unlabeled_dataloader:
                 try:
