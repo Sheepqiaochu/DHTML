@@ -83,6 +83,7 @@ def dataset_spilt():
         k = np.random.randint(low=0, high=10)
         if k < 5:
             labeled_set.append([label_of_person[0][i].item(), path[i]])
+            unlabeled_set.append([label_of_person[0][i].item(), features_of_person[i], path[i]])
         elif k > 5:
             unlabeled_set.append([label_of_person[0][i].item(), features_of_person[i], path[i]])
         else:

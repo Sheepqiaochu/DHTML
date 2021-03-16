@@ -83,14 +83,12 @@ def load_model(args, name_counts):
 
 
 def lr_tune(epoch):
-    if epoch < 300:
-        return 1.0 * (pow(0.5, epoch // 20))
+    if epoch < 400:
+        return 1.0 * (pow(0.6, epoch // 50))
     elif epoch < 800:
-        return 0.4 * (pow(0.9, epoch // 30))
-    elif epoch < 2000:
-        return 0.1 * (pow(0.95, epoch // 64))
+        return 0.03 * (pow(0.9, epoch // 50))
     else:
-        return 0.01
+        return 0.005 / ((epoch - 800) / 3200 + 1)
 
 
 def train(args):
