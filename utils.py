@@ -37,7 +37,7 @@ def lbp_loader(image_path):
     points = radius * 8
     img = cv2.imread(image_path)
     image_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    lbp = local_binary_pattern(image_gray, points, radius, method='uniform')
+    lbp = local_binary_pattern(image_gray, points, radius, method='var')
     lbp = lbp.astype(np.uint8)
 
     return lbp
@@ -147,7 +147,6 @@ def plot_loss(epoch, path, loss):
     plt.ylabel('loss')
     plt.savefig(figure_path)
     plt.legend(by_label.values(), by_label.keys())
-    # plt.show()
 
 #
 # for i in range(5):

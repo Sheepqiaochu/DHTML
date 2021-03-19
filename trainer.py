@@ -3,7 +3,7 @@ import os
 import torch
 
 from device import device
-from loss import compute_center_loss, get_center_delta, get_distillation_loss, get_feature_loss
+from loss import compute_center_loss, get_center_delta,  get_feature_loss
 from utils import plot_loss
 
 
@@ -61,10 +61,8 @@ class Trainer(object):
             loss_recorder = self.training_losses
             self.model2.train()
 
-        self_loss = 0
         total_L1_loss = 0
         total_self_loss = 0
-        total_distillation_loss = 0
         total_loss = 0
         batch = 0
 
@@ -84,8 +82,8 @@ class Trainer(object):
                 centers = self.model2.centers
 
                 # get unlabeled features
-                logits_source, features1_unlabeled = self.model1(unlabeled_image_source)
-                logits_target, features2_unlabeled = self.model2(unlabeled_image_target)
+                _, features1_unlabeled = self.model1(unlabeled_image_source)
+                _, features2_unlabeled = self.model2(unlabeled_image_target)
 
                 # get labeled features and logits
                 logits_labeled, features2_labeled = self.model2(labeled_image)
@@ -95,29 +93,22 @@ class Trainer(object):
                     logits_labeled, targets)
                 center_loss = compute_center_loss(features2_labeled, centers, targets)
 
-                # compute cross-domain loss
-                distillation_loss = get_distillation_loss(
-                    logits_source=logits_source,
-                    logits_target=logits_target
-                )
-
                 L1_loss = get_feature_loss(
                     features_source=features1_unlabeled,
                     features_target=features2_unlabeled
                 )
 
                 self_loss = self.lamda * center_loss + cross_entropy_loss
-                loss = self_loss + L1_loss * self.sigma + distillation_loss * self.phi
+                loss = self_loss + L1_loss * self.sigma
 
                 total_self_loss += self_loss
-                total_distillation_loss += distillation_loss
                 total_L1_loss += L1_loss
                 total_loss += loss
 
                 print(
-                    "[{}:{}] :  self_loss: {:.8f}\tL1_loss: {:.8f}\tdistillation_loss: {:.8f}\t"
+                    "[{}:{}] :  self_loss: {:.8f}\tL1_loss: {:.8f}\t"
                     "sum_loss: {:.8f}".format(
-                        mode, self.current_epoch, self_loss, L1_loss, distillation_loss,
+                        mode, self.current_epoch, self_loss, L1_loss,
                         loss
                     )
                 )
@@ -135,16 +126,15 @@ class Trainer(object):
             print("lr:", self.scheduler.get_last_lr())
             loss_recorder['self_loss'].append(total_self_loss)
             loss_recorder['L1_loss'].append(total_L1_loss * self.sigma)
-            loss_recorder['distillation_loss'].append(total_distillation_loss * self.phi)
             loss_recorder['together'].append(total_loss)
 
-            if not (self.current_epoch % 20):
+            if not (self.current_epoch % 40):
                 plot_loss(self.current_epoch, self.log_dir, loss_recorder)
             print(
                 "[{}:{}] finished.  total_self_loss: {:.8f}\t total_L1_loss: {:.8f}\t"
-                "total_distillation_loss: {:.8f}\t total_loss: {:.8f}".format(
+                "total_loss: {:.8f}".format(
                     mode, self.current_epoch, total_self_loss, total_L1_loss,
-                    total_distillation_loss, total_loss
+                    total_loss
                 )
             )
 

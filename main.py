@@ -97,32 +97,33 @@ def train(args):
     log_dir = get_log_dir(args)
 
     # split the dataset
-    labeled_set, unlabeled_set, test_set = dataset_spilt()
+    labeled_set, unlabeled_set, _ = dataset_spilt()
 
     # load dataset
     labeled_dataset = Dataset(labeled_set, target_transform=transform_for_lbp((224, 224)))
-    unlabeled_dataset = UnlabeledDataset(unlabeled_set, transform_for_training((224, 224)),
-                                         target_transform=transform_for_lbp((224, 224)))
-    test_set = Dataset(test_set, transform_for_infer((224, 224)))
+    unlabeled_dataset = UnlabeledDataset(unlabeled_set,
+                                         transform_for_training((224, 224)),
+                                         transform_for_lbp((224, 224))
+                                         )
 
     labeled_dataloader = torch.utils.data.DataLoader(
         labeled_dataset,
         batch_size=args.batch_size,
-        num_workers=6,
+        num_workers=4,
         shuffle=True
     )
 
     unlabeled_dataloader = torch.utils.data.DataLoader(
         unlabeled_dataset,
         batch_size=args.batch_size,
-        num_workers=6,
+        num_workers=4,
         shuffle=True
     )
 
     test_dataloader = torch.utils.data.DataLoader(
         labeled_dataset,
         batch_size=args.batch_size,
-        num_workers=6,
+        num_workers=4,
         shuffle=True
     )
 
@@ -138,8 +139,6 @@ def train(args):
         {'params': trainables_only_bn}
     ], lr=args.lr, momentum=0.9)
 
-    learning_rate_epoch = lambda e: 1.0 * (pow(0.5, e // 20)) if e < 150 else (
-        0.4 * (pow(0.9, e // 30)) if e < 400 else 0.1 * (pow(0.9, e // 64)))
     scheduler = torch.optim.lr_scheduler.LambdaLR(
         optimizer,
         lr_lambda=lr_tune,
@@ -175,7 +174,7 @@ def evaluate(args):
 
     dataset = LFWPairedDataset(
         dataset_dir, pairs_path, transform_for_lbp(model_class.IMAGE_SHAPE), loader=lbp_loader)
-    dataloader = DataLoader(dataset, batch_size=args.batch_size, num_workers=4)
+    dataloader = DataLoader(dataset, batch_size=args.batch_size, num_workers=6)
     model = model_class(width_mul=args.width_mul).to(device)
 
     checkpoint = torch.load(args.evaluate)
