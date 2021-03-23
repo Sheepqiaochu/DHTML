@@ -103,10 +103,10 @@ def train(args):
         {'params': trainables_only_bn}
     ], lr=args.lr, momentum=0.9)
 
-    learning_rate_epoch = lambda e:  1 if e < 20 else 0.01
+    learning_rate_epoch = lambda e:  1
     scheduler = torch.optim.lr_scheduler.LambdaLR(
         optimizer,
-        lr_lambda=learning_rate_epoch,
+        lr_lambda=lr_tune,
         last_epoch=-1)
 
 
