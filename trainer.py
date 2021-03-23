@@ -11,7 +11,7 @@ class Trainer(object):
     def __init__(
             self, optimizer, scheduler,model, training_dataloader,
             validation_dataloader, log_dir=False, max_epoch=2000, resume=False,
-            persist_stride=20, lamda=0.02, alpha=0.5):
+            persist_stride=20, lamda=0.03, alpha=0.5):
 
         self.log_dir = log_dir
         self.optimizer = optimizer
