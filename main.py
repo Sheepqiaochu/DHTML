@@ -44,6 +44,7 @@ def get_log_dir(args):
 
     return log_dir
 
+
 def lr_tune(epoch):
     if epoch < 150:
         return 1
@@ -51,6 +52,7 @@ def lr_tune(epoch):
         return 0.1 * (pow(0.9, epoch // 40))
     else:
         return 0.03 * (pow(0.9, epoch // 64))
+
 
 def get_model_class(args):
     if args.arch == 'resnet18':
@@ -88,27 +90,26 @@ def train(args):
         shuffle=False
     )
 
-    # model = model_class(args.width_mul).to(device)
     model = model_class(name_counts, width_mult=1.5).to(device)
-    # model = torch.nn.DataParallel(model)
-    # model = model.to(device)
-    print(str(model_class))
     trainables_wo_bn = [param for name, param in model.named_parameters() if
                         param.requires_grad and 'bn' not in name]
     trainables_only_bn = [param for name, param in model.named_parameters() if
                           param.requires_grad and 'bn' in name]
+
+    # for name, param in model.named_parameters():
+    #     if param.requires_grad and 'bn' not in name:
+    #         print(name)
 
     optimizer = torch.optim.SGD([
         {'params': trainables_wo_bn, 'weight_decay': 0.0001},
         {'params': trainables_only_bn}
     ], lr=args.lr, momentum=0.9)
 
-    learning_rate_epoch = lambda e:  1
+    learning_rate_epoch = lambda e: 1
     scheduler = torch.optim.lr_scheduler.LambdaLR(
         optimizer,
         lr_lambda=lr_tune,
         last_epoch=-1)
-
 
     trainer = Trainer(
         optimizer,

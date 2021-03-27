@@ -1,7 +1,7 @@
 import os
 
 import torch
-
+from FGM import FGM
 from device import device
 from loss import compute_center_loss, get_center_delta
 
@@ -9,7 +9,7 @@ from loss import compute_center_loss, get_center_delta
 class Trainer(object):
 
     def __init__(
-            self, optimizer, scheduler,model, training_dataloader,
+            self, optimizer, scheduler, model, training_dataloader,
             validation_dataloader, log_dir=False, max_epoch=2000, resume=False,
             persist_stride=20, lamda=0.03, alpha=0.5):
 
@@ -79,13 +79,13 @@ class Trainer(object):
         total_top3_matches = 0
         batch = 0
 
+        fgm = FGM(self.model)
         with torch.set_grad_enabled(mode == 'train'):
             for images, targets, names in dataloader:
                 batch += 1
                 targets = torch.tensor(targets).to(device)
                 images = images.to(device)
                 centers = self.model.centers
-
                 logits, features = self.model(images)
 
                 cross_entropy_loss = torch.nn.functional.cross_entropy(
@@ -100,6 +100,16 @@ class Trainer(object):
                 if mode == 'train':
                     self.optimizer.zero_grad()
                     loss.backward()
+
+                    # FGM attack
+                    fgm.attack()
+                    logits, features = self.model(images)
+                    cross_entropy_loss_adv = torch.nn.functional.cross_entropy(
+                        logits, targets)
+                    center_loss_adv = compute_center_loss(features, centers, targets)
+                    loss_adv = self.lamda * center_loss_adv + cross_entropy_loss_adv
+                    loss_adv.backward()
+                    fgm.restore()
                     self.optimizer.step()
 
                     # make features untrack by autograd, or there will be
