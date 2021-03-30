@@ -53,3 +53,4 @@ import matplotlib.pyplot as plt
 import torch
 import numpy as np
 
+print(0.05 / ((1200 - 800) / 1000 + 1))
