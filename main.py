@@ -83,9 +83,11 @@ def load_model(args, name_counts):
 
 
 def lr_tune(epoch):
-    if epoch < 100:
+    if epoch < 50:
+        return 0.01
+    elif epoch < 250:
         return 2
-    elif epoch < 800:
+    elif epoch < 1500:
         return 2.0 * (pow(0.8, (epoch - 100) // 30 + 1))
     else:
         return 0.05 / ((epoch - 800) / 3200 + 1)
@@ -97,7 +99,7 @@ def train(args):
     log_dir = get_log_dir(args)
 
     # split the dataset
-    labeled_set, unlabeled_set, _ = dataset_spilt()
+    labeled_set, unlabeled_set, _ = dataset_spilt(args)
 
     # load dataset
     labeled_dataset = Dataset(labeled_set, target_transform=transform_for_lbp((224, 224)))
@@ -285,6 +287,8 @@ if __name__ == '__main__':
     parser.add_argument('--sigma', type=int, metavar='N',
                         help='input batch size for training (default: 1000)')
     parser.add_argument('--phi', type=int, metavar='N',
+                        help='input batch size for training (default: 1000)')
+    parser.add_argument('--ratio', type=int, metavar='N',
                         help='input batch size for training (default: 1000)')
     args = parser.parse_args()
     main(args)

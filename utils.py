@@ -57,7 +57,7 @@ def generate_roc_curve(fpr, tpr, path):
     fig.savefig(path, dpi=fig.dpi)
 
 
-def dataset_spilt():
+def dataset_spilt(args):
     count = 0
     path = {}
     unlabeled_set = []
@@ -81,10 +81,10 @@ def dataset_spilt():
 
     for i in range(len(path)):
         k = np.random.randint(low=0, high=10)
-        if k < 1:
+        if k < args.ratio:
             labeled_set.append([label_of_person[0][i].item(), path[i]])
             unlabeled_set.append([label_of_person[0][i].item(), features_of_person[i], path[i]])
-        elif k > 1:
+        elif k > args.ratio:
             unlabeled_set.append([label_of_person[0][i].item(), features_of_person[i], path[i]])
         else:
             test_set.append([label_of_person[0][i].item(), path[i]])
