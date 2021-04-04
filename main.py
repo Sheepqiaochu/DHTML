@@ -1,5 +1,6 @@
 import argparse
 import os
+import sys
 
 import numpy as np
 import torch
@@ -27,7 +28,7 @@ def main(args):
 def get_dataset_dir(args):
     home = os.path.expanduser("~")
     dataset_dir = args.dataset_dir if args.dataset_dir else os.path.join(
-        home, 'datasets', 'lfw')
+        home, 'datasets', args.dataset)
 
     if not os.path.isdir(dataset_dir):
         os.mkdir(dataset_dir)
@@ -69,8 +70,8 @@ def train(args):
     log_dir = get_log_dir(args)
     model_class = get_model_class(args)
 
-    training_set, validation_set, name_counts = create_datasets(dataset_dir)
-
+    training_set, validation_set, name_counts = create_datasets(dataset_dir, args)
+    sys.exit()
     training_dataset = Dataset(
         training_set, transform_for_training(model_class.IMAGE_SHAPE))
     validation_dataset = Dataset(
@@ -105,7 +106,6 @@ def train(args):
         {'params': trainables_only_bn}
     ], lr=args.lr, momentum=0.9)
 
-    learning_rate_epoch = lambda e: 1
     scheduler = torch.optim.lr_scheduler.LambdaLR(
         optimizer,
         lr_lambda=lr_tune,
@@ -242,6 +242,9 @@ if __name__ == '__main__':
                              'split image pathes by comma')
     parser.add_argument('--width_mul', type=float, default=1.0,
                         help='width_mul of the shuffleNet')
+    parser.add_argument('--dataset', type=str,
+                        help='directory with lfw dataset'
+                             ' (default: $HOME/datasets/lfw)')
 
     args = parser.parse_args()
     main(args)

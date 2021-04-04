@@ -10,22 +10,25 @@ PAIRS_TRAIN = "http://vis-www.cs.umass.edu/lfw/pairsDevTrain.txt"
 PAIRS_VAL = "http://vis-www.cs.umass.edu/lfw/pairsDevTest.txt"
 
 
-def create_datasets(dataroot, train_val_split=0.9):
-    if not os.path.isdir(dataroot):  # path of dataset(~/datasets/lfw)
+def create_datasets(dataroot, args, train_val_split=0.5):
+    if not os.path.isdir(dataroot):  # path of dataset(~/datasets/lfw|caltech)
         os.mkdir(dataroot)
 
     dataroot_files = os.listdir(dataroot)  # names of people
-    data_tarball_file = DATASET_TARBALL.split('/')[-1]   # assign 'lfw-deepfunneled.tgz' to data_tarball_file
+    data_tarball_file = DATASET_TARBALL.split('/')[-1]  # assign 'lfw-deepfunneled.tgz' to data_tarball_file
     data_dir_name = data_tarball_file.split('.')[0]  # assign 'lfw-deepfunneled' to data_dir_name
 
     if data_dir_name not in dataroot_files:
         if data_tarball_file not in dataroot_files:
-            tarball = download(dataroot, DATASET_TARBALL)
+            tarball = download(dataroot, DATASET_TARBALL, args)
         with tarfile.open(tarball, 'r') as t:
             t.extractall(dataroot)
+    if args.dataset == 'lfw':
+        images_root = os.path.join(dataroot, 'lfw-deepfunneled')
+    else:
+        images_root = os.path.join(dataroot, '101_ObjectCategories')
 
-    images_root = os.path.join(dataroot, 'lfw-deepfunneled')
-    names = os.listdir(images_root)   # names of people
+    names = os.listdir(images_root)  # names of people
     if len(names) == 0:
         raise RuntimeError('Empty dataset')
 
@@ -42,7 +45,7 @@ def create_datasets(dataroot, train_val_split=0.9):
 
         training_set += map(
             add_class,
-            images_of_person[:ceil(total * train_val_split)])   # 90% of whole pictures(path of exact people(like adam))
+            images_of_person[:ceil(total * train_val_split)])  # 90% of whole pictures(path of exact people(like adam))
         validation_set += map(
             add_class,
             images_of_person[floor(total * train_val_split):])  # rest of the pictures(path)
@@ -62,7 +65,7 @@ class Dataset(data.Dataset):
         return len(self.datasets)
 
     def __getitem__(self, index):
-        image = image_loader(self.datasets[index][0])   # images of train set
+        image = image_loader(self.datasets[index][0])  # images of train set
         if self.transform:
             image = self.transform(image)
         #  training_set, validation_set, len(names)
@@ -101,13 +104,13 @@ class LFWPairedDataset(PairedDataset):
         pairs = self._read_pairs(self.pairs_cfg)
 
         for pair in pairs:
-            if len(pair) == 3:   # same person
+            if len(pair) == 3:  # same person
                 match = True
                 # index1, index2 is the index of pictures of one man
                 name1, name2, index1, index2 = \
                     pair[0], pair[0], int(pair[1]), int(pair[2])
 
-            else:    # from two persons
+            else:  # from two persons
                 match = False
                 name1, name2, index1, index2 = \
                     pair[0], pair[2], int(pair[1]), int(pair[3])
