@@ -9,14 +9,21 @@ DATASET_TARBALL = "http://vis-www.cs.umass.edu/lfw/lfw-deepfunneled.tgz"
 PAIRS_TRAIN = "http://vis-www.cs.umass.edu/lfw/pairsDevTrain.txt"
 PAIRS_VAL = "http://vis-www.cs.umass.edu/lfw/pairsDevTest.txt"
 
+CALTECH_PIC = "http://www.vision.caltech.edu/Image_Datasets/Caltech101/101_ObjectCategories.tar.gz"
+CALTECH_LABEL = "http://www.vision.caltech.edu/Image_Datasets/Caltech101/Annotations.tar"
+
 
 def create_datasets(dataroot, args, train_val_split=0.5):
     if not os.path.isdir(dataroot):  # path of dataset(~/datasets/lfw|caltech)
         os.mkdir(dataroot)
 
     dataroot_files = os.listdir(dataroot)  # names of people
-    data_tarball_file = DATASET_TARBALL.split('/')[-1]  # assign 'lfw-deepfunneled.tgz' to data_tarball_file
-    data_dir_name = data_tarball_file.split('.')[0]  # assign 'lfw-deepfunneled' to data_dir_name
+    if args.dataset == 'lfw':
+        data_tarball_file = DATASET_TARBALL.split('/')[-1]  # assign 'lfw-deepfunneled.tgz' to data_tarball_file
+        data_dir_name = data_tarball_file.split('.')[0]  # assign 'lfw-deepfunneled' to data_dir_name
+    else:
+        data_tarball_file = CALTECH_PIC.split('/')[-1]  # assign 'lfw-deepfunneled.tgz' to data_tarball_file
+        data_dir_name = data_tarball_file.split('.')[0]  # assign 'lfw-deepfunneled' to data_dir_name
 
     if data_dir_name not in dataroot_files:
         if data_tarball_file not in dataroot_files:

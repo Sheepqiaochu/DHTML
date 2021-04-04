@@ -71,7 +71,6 @@ def train(args):
     model_class = get_model_class(args)
 
     training_set, validation_set, name_counts = create_datasets(dataset_dir, args)
-    sys.exit()
     training_dataset = Dataset(
         training_set, transform_for_training(model_class.IMAGE_SHAPE))
     validation_dataset = Dataset(

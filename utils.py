@@ -38,7 +38,7 @@ def download(dir, url, args, dist=None):
         if os.path.isfile(download_path):
             print('File {} already downloaded'.format(download_path))
             return download_path
-        r = requests.get(url, stream=True)
+        r = requests.get(CALTECH_PIC, stream=True)
         total_size = int(r.headers.get('content-length', 0))
         block_size = 1024 * 1024
 
