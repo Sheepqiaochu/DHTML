@@ -90,7 +90,10 @@ def train(args):
         shuffle=False
     )
 
-    model = model_class(name_counts, width_mult=1.5).to(device)
+    if args.arch == 'resnet50':
+        model = model_class(name_counts).to(device)
+    else:
+        model = model_class(name_counts, width_mult=1.5).to(device)
     trainables_wo_bn = [param for name, param in model.named_parameters() if
                         param.requires_grad and 'bn' not in name]
     trainables_only_bn = [param for name, param in model.named_parameters() if
@@ -117,6 +120,7 @@ def train(args):
         training_dataloader,
         validation_dataloader,
         max_epoch=args.epochs,
+        attack=args.attack,
         resume=args.resume,
         log_dir=log_dir
     )
@@ -244,6 +248,8 @@ if __name__ == '__main__':
     parser.add_argument('--dataset', type=str,
                         help='directory with lfw dataset'
                              ' (default: $HOME/datasets/lfw)')
-
+    parser.add_argument('--attack', type=bool,
+                        help='model path to the resume training',
+                        default=True)
     args = parser.parse_args()
     main(args)

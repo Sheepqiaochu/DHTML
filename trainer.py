@@ -10,7 +10,7 @@ class Trainer(object):
 
     def __init__(
             self, optimizer, scheduler, model, training_dataloader,
-            validation_dataloader, log_dir=False, max_epoch=2000, resume=False,
+            validation_dataloader, attack, log_dir=False, max_epoch=2000, resume=False,
             persist_stride=20, lamda=0.03, alpha=0.5):
 
         self.log_dir = log_dir
@@ -19,6 +19,7 @@ class Trainer(object):
         self.model = model
         self.max_epoch = max_epoch
         self.resume = resume
+        self.attack = attack
         self.persist_stride = persist_stride
         self.training_dataloader = training_dataloader
         self.validation_dataloader = validation_dataloader
@@ -102,14 +103,16 @@ class Trainer(object):
                     loss.backward()
 
                     # FGM attack
-                    fgm.attack()
-                    logits, features = self.model(images)
-                    cross_entropy_loss_adv = torch.nn.functional.cross_entropy(
-                        logits, targets)
-                    center_loss_adv = compute_center_loss(features, centers, targets)
-                    loss_adv = self.lamda * center_loss_adv + cross_entropy_loss_adv
-                    loss_adv.backward()
-                    fgm.restore()
+                    if self.attack:
+                        fgm.attack()
+                        logits, features = self.model(images)
+                        cross_entropy_loss_adv = torch.nn.functional.cross_entropy(
+                            logits, targets)
+                        center_loss_adv = compute_center_loss(features, centers, targets)
+                        loss_adv = self.lamda * center_loss_adv + cross_entropy_loss_adv
+                        loss_adv.backward()
+                        fgm.restore()
+
                     self.optimizer.step()
 
                     # make features untrack by autograd, or there will be
