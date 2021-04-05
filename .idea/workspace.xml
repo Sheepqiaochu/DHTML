@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="006c0b6f-3a6f-445c-a48b-c94ce1167eb0" name="Default Changelist" comment="add parser to decide whether to attack model">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/device.py" beforeDir="false" afterPath="$PROJECT_DIR$/device.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/trainer.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +24,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../source_resnet50" />
   </component>
-  <component name="RunManager" selected="Python.test">
+  <component name="RunManager" selected="Python.main">
     <configuration name="loss" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="DHTML" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -109,15 +110,15 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.loss" />
       <item itemvalue="Python.main" />
+      <item itemvalue="Python.loss" />
       <item itemvalue="Python.test" />
       <item itemvalue="Python.utils" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.test" />
         <item itemvalue="Python.utils" />
+        <item itemvalue="Python.test" />
         <item itemvalue="Python.loss" />
       </list>
     </recent_temporary>
@@ -185,10 +186,19 @@
     <option name="LAST_COMMIT_MESSAGE" value="test" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>51</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="targets.shape" language="Python" />
-        <watch expression="torch.sum(torch.tensor(range(256)))" language="Python" />
+        <watch expression="model_class" language="Python" />
+        <watch expression="name, param" language="Python" />
       </configuration>
     </watches-manager>
   </component>

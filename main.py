@@ -42,6 +42,12 @@ def get_log_dir(args):
 
     if not os.path.isdir(log_dir):
         os.mkdir(log_dir)
+    f_dir = os.path.join(log_dir, "command.txt")
+    f = open(f_dir,'w')
+    for i in vars(args):
+        f.write(i+':\t')
+        f.write(str(getattr(args, i)))
+        f.write('\n')
 
     return log_dir
 
@@ -286,7 +292,7 @@ if __name__ == '__main__':
                         help='input batch size for training (default: 1000)')
     parser.add_argument('--phi', type=int, metavar='N',
                         help='input batch size for training (default: 1000)')
-    parser.add_argument('--ratio', type=int, metavar='N',
+    parser.add_argument('--ratio', type=int, metavar='N', default=1,
                         help='input batch size for training (default: 1000)')
     args = parser.parse_args()
     main(args)
