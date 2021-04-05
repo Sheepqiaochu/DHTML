@@ -3,7 +3,7 @@ import os
 import torch
 
 from device import device
-from loss import compute_center_loss, get_center_delta,  get_feature_loss
+from loss import compute_center_loss, get_center_delta, get_feature_loss
 from utils import plot_loss
 
 
@@ -13,7 +13,7 @@ class Trainer(object):
             self, optimizer, scheduler, model1, model2,
             labeled_dataloader, unlabeled_dataloader, test_dataloader,
             log_dir=False, max_epoch=100, resume=False,
-            persist_stride=20, lamda=0.03, alpha=0.5, sigma=100, phi=1000):
+            persist_stride=20, lamda=0.03, alpha=0.5, sigma=100, phi=1):
 
         self.log_dir = log_dir
         self.optimizer = optimizer
@@ -98,7 +98,7 @@ class Trainer(object):
                 )
 
                 self_loss = self.lamda * center_loss + cross_entropy_loss
-                loss = self_loss + L1_loss * self.sigma
+                loss = self.phi * self_loss + self.sigma * L1_loss
 
                 total_self_loss += self_loss
                 total_L1_loss += L1_loss

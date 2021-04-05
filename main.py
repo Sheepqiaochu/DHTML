@@ -83,14 +83,12 @@ def load_model(args, name_counts):
 
 
 def lr_tune(epoch):
-    if epoch < 50:
-        return 0.01
-    elif epoch < 250:
+    if epoch < 150:
         return 2
     elif epoch < 1500:
-        return 2.0 * (pow(0.8, (epoch - 100) // 30 + 1))
+        return 2.0 * (pow(0.8, epoch // 30))
     else:
-        return 0.05 / ((epoch - 800) / 3200 + 1)
+        return 0.0001
 
 
 def train(args):
@@ -176,7 +174,7 @@ def evaluate(args):
 
     dataset = LFWPairedDataset(
         dataset_dir, pairs_path, transform_for_lbp(model_class.IMAGE_SHAPE), loader=lbp_loader)
-    dataloader = DataLoader(dataset, batch_size=args.batch_size, num_workers=6)
+    dataloader = DataLoader(dataset, batch_size=args.batch_size, num_workers=6, shuffle=False)
     model = model_class(width_mul=args.width_mul).to(device)
 
     checkpoint = torch.load(args.evaluate)

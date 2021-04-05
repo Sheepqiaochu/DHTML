@@ -27,5 +27,5 @@ def transform_for_lbp(image_shape):
          transforms.Resize(image_shape),
          transforms.RandomHorizontalFlip(),
          transforms.ToTensor(),
-         transforms.Normalize([0.5, ], [0.5, ])]
+         transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])]
     )
