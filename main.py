@@ -245,7 +245,7 @@ if __name__ == '__main__':
                              'split image pathes by comma')
     parser.add_argument('--width_mul', type=float, default=1.0,
                         help='width_mul of the shuffleNet')
-    parser.add_argument('--dataset', type=str,
+    parser.add_argument('--dataset', type=str, default='caltech101',
                         help='directory with lfw dataset'
                              ' (default: $HOME/datasets/lfw)')
     parser.add_argument('--attack', type=bool,
