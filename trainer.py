@@ -3,7 +3,7 @@ import os
 import torch
 
 from device import device
-from loss import compute_center_loss, get_center_delta, get_feature_loss
+from loss import compute_center_loss, get_center_delta, get_feature_loss, get_distillation_loss
 from utils import plot_loss
 
 
@@ -60,6 +60,7 @@ class Trainer(object):
             loss_recorder = self.training_losses
             self.model2.train()
 
+        total_distillation_loss = 0
         total_L1_loss = 0
         total_self_loss = 0
         total_loss = 0
@@ -81,8 +82,8 @@ class Trainer(object):
                 centers = self.model2.centers
 
                 # get unlabeled features
-                _, features1_unlabeled = self.model1(unlabeled_image_source)
-                _, features2_unlabeled = self.model2(unlabeled_image_target)
+                logits_unlabeled_source, features1_unlabeled = self.model1(unlabeled_image_source)
+                logits_unlabeled_target, features2_unlabeled = self.model2(unlabeled_image_target)
 
                 # get labeled features and logits
                 logits_labeled, features2_labeled = self.model2(labeled_image)
@@ -97,17 +98,20 @@ class Trainer(object):
                     features_target=features2_unlabeled
                 )
 
-                self_loss = self.lamda * center_loss + cross_entropy_loss
-                loss = self.phi * self_loss + self.sigma * L1_loss
+                distillation_loss = get_distillation_loss(logits_unlabeled_target, logits_unlabeled_source)
 
+                self_loss = self.lamda * center_loss + cross_entropy_loss
+                loss = self.phi * self_loss + self.sigma * distillation_loss
+
+                total_distillation_loss += distillation_loss
                 total_self_loss += self_loss
                 total_L1_loss += L1_loss
                 total_loss += loss
 
                 print(
-                    "[{}:{}] :  self_loss: {:.8f}\tL1_loss: {:.8f}\t"
+                    "[{}:{}] :  self_loss: {:.8f}\tdistillation_loss: {:.8f}\t"
                     "sum_loss: {:.8f}".format(
-                        mode, self.current_epoch, self_loss, L1_loss,
+                        mode, self.current_epoch, self_loss, distillation_loss,
                         loss
                     )
                 )
@@ -130,9 +134,9 @@ class Trainer(object):
             if not (self.current_epoch % 40):
                 plot_loss(self.current_epoch, self.log_dir, loss_recorder)
             print(
-                "[{}:{}] finished.  total_self_loss: {:.8f}\t total_L1_loss: {:.8f}\t"
+                "[{}:{}] finished.  total_self_loss: {:.8f}\t total_distillation_loss: {:.8f}\t"
                 "total_loss: {:.8f}".format(
-                    mode, self.current_epoch, total_self_loss, total_L1_loss,
+                    mode, self.current_epoch, total_self_loss, total_distillation_loss,
                     total_loss
                 )
             )
