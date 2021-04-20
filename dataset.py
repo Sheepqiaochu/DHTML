@@ -13,7 +13,7 @@ CALTECH_PIC = "http://www.vision.caltech.edu/Image_Datasets/Caltech101/101_Objec
 CALTECH_LABEL = "http://www.vision.caltech.edu/Image_Datasets/Caltech101/Annotations.tar"
 
 
-def create_datasets(dataroot, args, train_val_split=0.5):
+def create_datasets(dataroot, args, train_val_split=0.9):
     if not os.path.isdir(dataroot):  # path of dataset(~/datasets/lfw|caltech)
         os.mkdir(dataroot)
 

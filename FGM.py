@@ -1,7 +1,7 @@
 import torch
 
 
-class FGM():
+class FGM:
     def __init__(self, model):
         self.model = model
         self.backup = {}
